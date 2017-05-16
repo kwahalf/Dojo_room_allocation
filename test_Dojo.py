@@ -42,7 +42,7 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person("CHRISTINE", "JUMA", "STAFF", "N")
         self.assertEqual(self.dojo.add_person("Christine", "Juma", "STAFF",
                          "N"),
-                         "{} Exists in Amity.".format("CHRISTINE JUMA"))
+                         "{} Exists in Dojo.".format("CHRISTINE JUMA"))
 
     def test_if_person_name_is_valid(self):
         #Test if person name is valid
