@@ -11,13 +11,14 @@ class TestDojo(unittest.TestCase):
         #Test if room is succesfully created
         self.assertEqual(self.dojo.create_room("Nairobi", "OFFICE"),
                          "Room Created")
-        self.assertEqual(self.dojo.create_room("Mombasa", "LIVINGSPACE"),
+        self.assertEqual(self.dojo.create_room("Kitale", "LIVINGSPACE"),
                          "Room Created")
 
     def test_room_only_created_once(self):
         #Test for room duplication
         self.dojo.create_room("Eldoret", "OFFICE")
-        self.assertEqual(self.dojo.create_room("Eldoret", "OFFICE"),
+        self.dojo.create_room("Kampala", "OFFICE")
+        self.assertEqual(self.dojo.create_room("eldoret", "OFFICE"),
                          "{} already Exists in Dojo.".format("ELDORET"))
 
     def test_if_room_name_is_valid(self):
