@@ -1,5 +1,0 @@
-{
-  "test_Dojo.py::TestDojo::test_add_duplicating_person": true, 
-  "test_Dojo.py::TestDojo::test_add_person": true, 
-  "test_Dojo.py::TestDojo::test_if_person_name_is_valid": true
-}
