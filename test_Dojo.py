@@ -11,7 +11,7 @@ class TestDojo(unittest.TestCase):
         #Test if room is succesfully created
         self.assertEqual(self.dojo.create_room("Nairobi", "OFFICE"),
                          "Room Created")
-        self.assertEqual(self.dojo.create_room("Kitale", "LIVINGSPACE"),
+        self.assertEqual(self.dojo.create_room("Moyale", "LIVINGSPACE"),
                          "Room Created")
 
     def test_room_only_created_once(self):
@@ -21,10 +21,10 @@ class TestDojo(unittest.TestCase):
         self.assertEqual(self.dojo.create_room("eldoret", "OFFICE"),
                          "{} already Exists in Dojo.".format("ELDORET"))
 
-    def test_if_room_name_is_valid(self):
+    def test_if_room_name_is_a_string(self):
         #Test valid room name
         self.assertEqual(self.dojo.create_room(
-                         123, "OFFICE"), "Room names should be strings")
+                         890, "OFFICE"), "Room names should be strings")
 
     def test_add_person(self):
         #test for adittion of a person or persons
@@ -44,9 +44,9 @@ class TestDojo(unittest.TestCase):
                          "N"),
                          "{} Exists in Dojo.".format("CHRISTINE JUMA"))
 
-    def test_if_person_name_is_valid(self):
+    def test_if_person_name_is_a_string(self):
         #Test if person name is valid
-        self.assertEqual(self.dojo.add_person(123, 123, "STAFF", "N"),
+        self.assertEqual(self.dojo.add_person(678, 123, "STAFF", "N"),
                          "person's names should be strings")
 
 if __name__ == "__main__":
