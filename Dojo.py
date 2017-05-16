@@ -1,3 +1,4 @@
+import random
 from Models.person import Person, Fellow, Staff
 from Models.Room import Room, Office, LivingSpace
 
@@ -11,7 +12,7 @@ class Dojo(object):
         self.allocated = []
         self.unallocated = []
 
-     # creates a new room if one with the same name and purpose exists
+     # creates a new room if one with the same name and purpose does not exists
     def create_room(self, room_name, purpose):
         #checks room_name and purpose are strings
         if (isinstance(room_name, str) and isinstance(purpose, str)):
@@ -35,10 +36,115 @@ class Dojo(object):
                     self.rooms.append(room)
                     print("{} {} created".format(room.room_name, room.purpose))
                     return "Room Created"
-                    # Prints a prompt if purpose is not a valid purpose\
+                    # Prints a prompt if purpose is not a valid purpose
                 else:
                     print("{} is not a valid room type.".format(purpose))
         # Prints a prompt if room_name is not an integer
         else:
             print("Room names should be strings")
             return "Room names should be strings"
+
+    # Adds a person to the system if the person doesnt exist in the system
+    def add_person(self, first_name, second_name, role, wants_accomodation):
+        # Check if the names provided are strings before proceeding
+        if (isinstance(first_name, str) and isinstance(second_name, str)):
+            # Changes all the names passed into uppercase and join them
+            person_name = first_name.upper() + " " + second_name.upper()
+            # Creates a list of people allocated rooms
+            # and check if the said person is there
+            allocated = [allocated for allocated in self.allocated
+                         if person_name.upper() == allocated.
+                         person_name.upper()]
+            # Creates a list of of people not allocated rooms
+            # and check if the said person is there
+            unallocated = [unallocated for unallocated in self.unallocated
+                           if person_name.upper() == unallocated.
+                           person_name.upper()]
+            person = allocated or unallocated
+            # If a person is found in allocated or unallocated room list
+            # it prints the prompt bellow
+            if person:
+                print("{} Exists in Dojo.".format(person_name))
+                return "{} Exists in Dojo.".format(person_name)
+
+            # If a person is not in allocated list and also not in
+            # unallocated list, add person to the system
+            else:
+                # If a person is a fellow and does not want living space
+                # add him/her as fellow and dont provide living space
+                if role.upper() == "FELLOW" and wants_accomodation == "N":
+                    person = Fellow(person_name)
+                    self.allocate_office(person)
+                    return "Fellow Added"
+                # If a person is a fellow and does not want living space
+                # add him/her as fellow and provide living space
+                elif role.upper() == "FELLOW" and wants_accomodation == "Y":
+                    person = Fellow(person_name)
+                    self.allocate_office(person)
+                    self.allocate_living_space(person)
+                    return "Fellow Added and LivingSpace Allocated"
+                # If a person is a staff and does not want living space
+                # add him/her as staff and dont provide living space
+                elif role.upper() == "STAFF" and wants_accomodation == "N":
+                    person = Staff(person_name)
+                    self.allocate_office(person)
+                    return "Staff Added"
+                # If a person is a staff and does want living space
+                # add him/her as staff and dont provide living space
+                elif role.upper() == "STAFF" and wants_accomodation == "Y":
+                    person = Staff(person_name)
+                    self.allocate_office(person)
+                    print("Staff Added and Allocated Office Only")
+                    return "Staff Added and Allocated Office Only"
+                # If role is not defined
+                else:
+                    print("{} is not a valid role type.".format(role))
+
+        # If name is integer print and return the prompt bellow
+        else:
+            print("person's names should be strings")
+            return "person's names should be strings"
+
+    def allocate_office(self, person):
+        try:
+            # Check if room has space
+            if self.offices:
+                room = [room for room in self.offices if len(
+                    room.occupants) < 6]
+                # randomly chooses a  a room and assign it
+                office = random.choice(room)
+                office.occupants.append(person)
+                self.allocated.append(person)
+                print("{} allocated office {}".format(person.person_name,
+                                                      office.room_name))
+                return "Office Allocated"
+            else:
+                # does not assighn romm
+                self.unallocated.append(person)
+                print("No Office available now, {} placed in waiting list ".
+                      format(person.person_name))
+                return "No Office Available"
+        except IndexError:
+            self.unallocated.append(person)
+            print("No Office available now, {} placed in waiting list ".
+                  format(person.person_name))
+
+    def allocate_living_space(self, person):
+        try:
+            # Check if room has space
+            if self.living_spaces:
+                room = [room for room in self.living_spaces if len(
+                    room.occupants) < 4]
+                living = random.choice(room)
+                living.occupants.append(person)
+                print("and allocated livingspace {}".format(living.room_name))
+            else:
+                # Doesnt allocate room but adds in witing list
+                self.unallocated.append(person)
+                print("No living space now, {} placed in waiting list"
+                      .format(person.person_name))
+
+        except IndexError:
+            self.unallocated.append(person)
+            print("No living space available now, {} placed in waiting list "
+                  .format(person.person_name))
