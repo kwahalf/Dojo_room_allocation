@@ -51,12 +51,14 @@ class Dojo(object):
             # Changes all the names passed into uppercase and join them
             person_name = first_name.upper() + " " + second_name.upper()
             # Creates a list of people allocated rooms
-            # and check if the said person is there
+            # and filter it with the persons name to check if he/she
+            # was allocated a room
             allocated = [allocated for allocated in self.allocated
                          if person_name.upper() == allocated.
                          person_name.upper()]
             # Creates a list of of people not allocated rooms
-            # and check if the said person is there
+            # and filter it with the persons name to check if he/she
+            # was not allocated a room
             unallocated = [unallocated for unallocated in self.unallocated
                            if person_name.upper() == unallocated.
                            person_name.upper()]
@@ -107,19 +109,24 @@ class Dojo(object):
 
     def allocate_office(self, person):
         try:
-            # Check if room has space
+            # Check if there are offices with space and
+            # if there are, allocate space
             if self.offices:
                 room = [room for room in self.offices if len(
                     room.occupants) < 6]
-                # randomly chooses a  a room and assign it
+                # randomly chooses an office
                 office = random.choice(room)
+                # Adds the person to the occupants list of the office
                 office.occupants.append(person)
+                # Adds the person to the allocated list
                 self.allocated.append(person)
                 print("{} allocated office {}".format(person.person_name,
                                                       office.room_name))
                 return "Office Allocated"
+            # If offices are full
             else:
-                # does not assighn romm
+                # does not assign office space and add the person
+                # on a waiting list
                 self.unallocated.append(person)
                 print("No Office available now, {} placed in waiting list ".
                       format(person.person_name))
@@ -131,15 +138,19 @@ class Dojo(object):
 
     def allocate_living_space(self, person):
         try:
-            # Check if room has space
+            # Check if there are living spaces with space
+            # and if there are, allocate space
             if self.living_spaces:
                 room = [room for room in self.living_spaces if len(
                     room.occupants) < 4]
+                # randomly chooses a living space
                 living = random.choice(room)
+                # Adds the person to the occupants list of the office
                 living.occupants.append(person)
                 print("and allocated livingspace {}".format(living.room_name))
+            # If living spaces are full
             else:
-                # Doesnt allocate room but adds in witing list
+                # Doesnt allocate room but adds person on a witing list
                 self.unallocated.append(person)
                 print("No living space now, {} placed in waiting list"
                       .format(person.person_name))
