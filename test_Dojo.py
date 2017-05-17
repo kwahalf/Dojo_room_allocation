@@ -1,5 +1,8 @@
 import unittest
+import random
 from Dojo import Dojo
+from Models.person import Fellow, Staff, Person
+from Models.Room import Room, Office, LivingSpace
 
 
 class TestDojo(unittest.TestCase):
@@ -32,7 +35,7 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room("Bujumbura", "LIVINGSPACE")
         self.assertEqual(self.dojo.add_person("Denis", "Juma", "STAFF",
                          "N"), "Staff Added")
-        self.assertEqual(self.Dojo.add_person("Denis", "Kola", "FELLOW",
+        self.assertEqual(self.dojo.add_person("Denis", "Kola", "FELLOW",
                          "N"), "Fellow Added")
         self.assertEqual(self.dojo.add_person("Victor", "Wamocha", "FELLOW",
                          "Y"), "Fellow Added and LivingSpace Allocated")
