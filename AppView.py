@@ -4,14 +4,12 @@
 """
 Usage:
     dojo create_room (<room_type> <room_name>)...
-    dojo add_person <first_name> <last_name>(Fellow | Staff)
-                              [--wants_accomodation=(Y | N)]
+    dojo add_person <first_name> <last_name> <Person_role> [--a=<wants_accomodation>]
     dojo (-i | --interactive)
     dojo (-h | --help | --version)
 
     Options:
     -i, --interactive  Interactive Mode
-    -a, --wants_accomodation=<opt>  Person wants accomodation [default: N]
 """
 
 
@@ -82,21 +80,16 @@ class DojoSystem(cmd.Cmd):
     @docopt_cmd
     def do_add_person(self, args):
         """
-        Usage:
-    add_person <first_name> <second_name> (fellow | staff)
-    [--wants_accomodation=<opt>]
-        Options:
-            -a, --wants_accomodation=<opt>  Wants accomodation [default: N]
+        Usage: add_person <first_name> <second_name> <Person_role> [--a=<wants_accomodation>]
         """
         first_name = args["<first_name>"]
         second_name = args["<second_name>"]
-        if args["fellow"]:
-            role = "FELLOW"
+        role = args["<Person_role>"]
+        if args['--a'] == None:
+            wants_accomodation = "N"
         else:
-            role = "STAFF"
-        wants_accomodation = args["--wants_accomodation"]
-        if wants_accomodation == 'Y' or wants_accomodation == 'N':
-            dojo.add_person(first_name, second_name, role, wants_accomodation)
+            wants_accomodation = str(args['--a'])
+        dojo.add_person(first_name, second_name, role, wants_accomodation)
 
     def do_clear(self, arg):
         """Clears screen"""
