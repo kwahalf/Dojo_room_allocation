@@ -3,7 +3,6 @@ from Models.person import Person, Fellow, Staff
 from Models.Room import Room, Office, LivingSpace
 
 
-#class dojo as our controlre
 class Dojo(object):
     def __init__(self):
         self.rooms = []
@@ -22,14 +21,14 @@ class Dojo(object):
                 return "{} already Exists in Dojo.".format(room_name.upper())
             else:
                 # Creates office if purpose is office
-                if purpose == "OFFICE" or purpose == "office":
+                if purpose.upper() == "OFFICE":
                     room = Office(room_name.upper())
                     self.offices.append(room)
                     self.rooms.append(room)
                     print("{} {} created".format(room.room_name, room.purpose))
                     return "Room Created"
                 # creates Livingspace if purpose is livingspace
-                elif purpose == "LIVINGSPACE" or purpose == "livingspace":
+                elif purpose.upper() == "LIVINGSPACE":
                     room = LivingSpace(room_name.upper())
                     self.living_spaces.append(room)
                     self.rooms.append(room)
@@ -174,27 +173,3 @@ class Dojo(object):
         else:
             print("{} does not exist in dojo".format(room_name.upper()))
             return "Room does not exist"
-
-    def print_allocations(self, filename):
-        # if rooms are not allocated
-        if not self.rooms:
-            print("No Rooms to Show")
-            return "No Rooms"
-        output = " "
-        # If rooms are allocated
-        for room in self.rooms:
-            if len(room.occupants):
-                output += room.room_name.upper() + '\n'
-                output += "--" * 60 + '\n'
-                for occupant in room.occupants:
-                    output += occupant.person_name + ", "
-                output += ("\n\n")
-        print(output)
-        return "Allocations Printed"
-
-        if filename:
-            with open(filename, 'w') as f:
-                f.write(output)
-            print("Allocations Printed to {}".format(filename))
-            return "Allocations Printed to {}".format(filename)
-        return "Successfully Printed Allocations"
