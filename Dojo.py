@@ -176,7 +176,7 @@ class Dojo(object):
             return "Room does not exist"
 
     def print_allocations(self, filename):
-
+        # if rooms are not there
         if not self.rooms:
             print("No Rooms to Show")
             return "No Rooms"
