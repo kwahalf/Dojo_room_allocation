@@ -176,11 +176,12 @@ class Dojo(object):
             return "Room does not exist"
 
     def print_allocations(self, filename):
-        # if rooms are not there
+        # if rooms are not allocated
         if not self.rooms:
             print("No Rooms to Show")
             return "No Rooms"
         output = " "
+        # If rooms are allocated
         for room in self.rooms:
             if len(room.occupants):
                 output += room.room_name.upper() + '\n'
