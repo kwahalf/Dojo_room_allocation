@@ -3,10 +3,10 @@ Dojo is an app used to register and allocate rooms randomly to Andelans. Each An
 
 # Instalation:
 
-$ md Dojo
-$ cd Dojo
-$ git clone https://github.com/kwahalf/Dojo_room_allocation
-$ cd Dojo_room_allocation
+ md Dojo
+ cd Dojo
+ git clone https://github.com/kwahalf/Dojo_room_allocation
+ cd Dojo_room_allocation
 
 # Install Requirements
 
