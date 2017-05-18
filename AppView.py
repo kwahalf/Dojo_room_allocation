@@ -8,7 +8,6 @@ Usage:
                     [--a=<wants_accomodation>]
     dojo print_room <room_name>
     dojo (-i | --interactive)
-    dojo (-h | --help | --version)
 
     Options:
     -i, --interactive  Interactive Mode
@@ -102,17 +101,17 @@ class DojoSystem(cmd.Cmd):
 
     def do_clear(self, arg):
         """Clears screen"""
-        os.system("clear")
+        os.system("cls")
 
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
-        print("Don't be a stranger. Welcome back again!")
+        print("You have exited dojo succesfuly. Welcome back again!")
         exit()
 
 opt = docopt(__doc__, sys.argv[1:])
 
 if opt['--interactive']:
-    os.system("clear")
+    os.system("cls")
     intro()
     DojoSystem().cmdloop()
 
