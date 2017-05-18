@@ -1,22 +1,22 @@
 # Dojo_room_allocation
 Dojo is an app used to register and allocate rooms randomly to Andelans. Each Andelan must be assigned an office and only Fellows are elegible to be allocated living spaces
 
-#Instalation:
+# Instalation:
 
 $ md Dojo
 $ cd Dojo
 $ git clone https://github.com/kwahalf/Dojo_room_allocation
 $ cd Dojo_room_allocation
 
-#Install Requirements
+# Install Requirements
 
  pip install requierd pacakes listed in requirements.txt
 
-#Start the app on the terminal
+# Start the app on the terminal
 
   AppView.py -i
   
-#The App has the following functionalities:
+# The App has the following functionalities:
 
 create_room (<room_type>)(<room_name> )...
 Takes two arguments for an instance i.e room_name and purpose. Multiple rooms can also be created at the same time
