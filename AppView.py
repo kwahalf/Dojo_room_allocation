@@ -4,7 +4,9 @@
 """
 Usage:
     dojo create_room (<room_type> <room_name>)...
-    dojo add_person <first_name> <last_name> <Person_role> [--a=<wants_accomodation>]
+    dojo add_person <first_name> <last_name> <Person_role>
+                    [--a=<wants_accomodation>]
+    dojo print_room <room_name>
     dojo (-i | --interactive)
     dojo (-h | --help | --version)
 
@@ -75,21 +77,28 @@ class DojoSystem(cmd.Cmd):
         rooms = args["<room_name>"]
         for room in rooms:
             purpose = purposes[rooms.index(room)]
-            dojo.create_room(room, purpose)
+            dojo.create_room(room.upper(), purpose.upper())
 
     @docopt_cmd
     def do_add_person(self, args):
         """
-        Usage: add_person <first_name> <second_name> <Person_role> [--a=<wants_accomodation>]
+        Usage: add_person <first_name> <second_name> <Person_role>
+               [--a=<wants_accomodation>]
         """
         first_name = args["<first_name>"]
         second_name = args["<second_name>"]
         role = args["<Person_role>"]
-        if args['--a'] == None:
+        if args['--a'] is None:
             wants_accomodation = "N"
         else:
             wants_accomodation = str(args['--a'])
         dojo.add_person(first_name, second_name, role, wants_accomodation)
+
+    @docopt_cmd
+    def do_print_room(self, arg):
+        """usage: print_room <room_name>"""
+        room_name = arg["<room_name>"]
+        dojo.print_room(room_name)
 
     def do_clear(self, arg):
         """Clears screen"""
