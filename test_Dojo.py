@@ -1,8 +1,8 @@
 import unittest
 import random
 from Dojo import Dojo
-from Models.person import Fellow, Staff, Person
-from Models.Room import Room, Office, LivingSpace
+#from Models.person import Fellow, Staff, Person
+#from Models.Room import Room, Office, LivingSpace
 
 
 class TestDojo(unittest.TestCase):
@@ -51,6 +51,62 @@ class TestDojo(unittest.TestCase):
         #Test if person name is valid
         self.assertEqual(self.dojo.add_person(678, 123, "STAFF", "N"),
                          "person's names should be strings")
+
+    def test_if_staff_gets_accomodation(self):
+        #Test if staff can be given accomodation
+        self.dojo.create_room("BUSIA", "OFFICE")
+        self.dojo.create_room("bungoma", "LIVINGSPACE")
+        self.assertEqual(
+            self.dojo.add_person("Sharon", "Akinyi", "STAFF",
+                                 "Y"),
+            "Staff Added and Allocated Office Only")
+
+    def test_if_you_can_print_an_existing_room(self):
+        # test if an existing room can be printed
+        self.dojo.create_room("Kangundo", "OFFICE")
+        self.assertEqual(self.dojo.print_room("Kangundo"),
+                         "Print room successful")
+
+    def test_if_you_can_print_nonexisting_room(self):
+        # test if a non existing room can be printed
+        self.assertEqual(self.dojo.print_room("Kirinyaga"),
+                         "Room does not exist")
+
+    def test_if_you_can_print_allocations_to_file(self):
+        #Test that Allocated rooms can be printed to specified file name
+        self.dojo.create_room("Voi", "OFFICE")
+        self.dojo.add_person("Martin", "Katami", "STAFF", "N")
+        self.assertEqual(self.dojo.print_allocations(
+            "data.txt"), "Allocations Printed to data.txt")
+
+    def test_print_allocations_to_file(self):
+        #Test that Allocations Printed successfully
+        self.dojo.create_room("Webuye", "OFFICE")
+        self.dojo.add_person("Kevin", "Juma", "STAFF", "N")
+        self.assertEqual(self.dojo.print_allocations(self),
+                         "Allocations Printed")
+
+    def test_print_allocations_while_there_are_no_rooms(self):
+        #Test that allocations not printed if no rooms available in Dojo
+        self.assertEqual(self.dojo.print_allocations("data.txt"), "No Rooms")
+
+    def test_if_you_can_print_unallocated_members(self):
+        # Test if unallocated members printed"""
+        self.dojo.add_person("ROSE", "WAMBUI", "STAFF", "N")
+        self.dojo.add_person("Ben", "Katili", "fellow", "N")
+        self.dojo.create_room("London", "OFFICE")
+        self.dojo.create_room("Brexit", "livingspace")
+        self.assertEqual(self.dojo.print_unallocated(self),
+                         "Unallocated Displayed")
+
+    def test_print_unallocated_with_no_members_unallocated(self):
+         #Test that unallocated list is not printed
+         # if no members are available"
+        self.dojo.create_room("Malaba", "OFFICE")
+        self.dojo.add_person("Sylvia", "Makinia", "STAFF", "N")
+        self.dojo.add_person("James", "Mambo", "fellow", "N")
+        self.assertEqual(self.dojo.print_unallocated(self),
+                         "No Member in Unallocated")
 
 if __name__ == "__main__":
     unittest.main(exit=False)
