@@ -12,7 +12,6 @@ class Dojo(object):
         self.allocated = []
         self.unallocated = []
 
-     # creates a new room if one with the same name and purpose does not exists
     def create_room(self, room_name, purpose):
         #checks room_name and purpose are strings
         if (isinstance(room_name, str) and isinstance(purpose, str)):
@@ -44,7 +43,6 @@ class Dojo(object):
             print("Room names should be strings")
             return "Room names should be strings"
 
-    # Adds a person to the system if the person doesnt exist in the system
     def add_person(self, first_name, second_name, role, wants_accomodation):
         # Check if the names provided are strings before proceeding
         if (isinstance(first_name, str) and isinstance(second_name, str)):
@@ -160,7 +158,6 @@ class Dojo(object):
             print("No living space available now, {} placed in waiting list "
                   .format(person.person_name))
 
-    # Prints a rooms and all it's occupants
     def print_room(self, room_name):
         room = [room for room in self.rooms if room_name.upper() ==
                 room.room_name.upper()]
@@ -175,5 +172,28 @@ class Dojo(object):
             return "Print room successful"
         # if room does not exist
         else:
-            print("{} does not exist in Amity".format(room_name.upper()))
+            print("{} does not exist in dojo".format(room_name.upper()))
             return "Room does not exist"
+
+    def print_allocations(self, filename):
+
+        if not self.rooms:
+            print("No Rooms to Show")
+            return "No Rooms"
+        output = " "
+        for room in self.rooms:
+            if len(room.occupants):
+                output += room.room_name.upper() + '\n'
+                output += "--" * 60 + '\n'
+                for occupant in room.occupants:
+                    output += occupant.person_name + ", "
+                output += ("\n\n")
+        print(output)
+        return "Allocations Printed"
+
+        if filename:
+            with open(filename, 'w') as f:
+                f.write(output)
+            print("Allocations Printed to {}".format(filename))
+            return "Allocations Printed to {}".format(filename)
+        return "Successfully Printed Allocations"
