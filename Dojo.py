@@ -159,3 +159,21 @@ class Dojo(object):
             self.unallocated.append(person)
             print("No living space available now, {} placed in waiting list "
                   .format(person.person_name))
+
+    # Prints a rooms and all it's occupants
+    def print_room(self, room_name):
+        room = [room for room in self.rooms if room_name.upper() ==
+                room.room_name.upper()]
+        # if rooom exists print the occupants
+        if room:
+            room = room[0]
+            print("\n{}'s OCCUPANTS".format(room.room_name.upper()))
+            print("----" * 10)
+            for person in room.occupants:
+                print(person.person_name)
+            print("----" * 10)
+            return "Print room successful"
+        # if room does not exist
+        else:
+            print("{} does not exist in Amity".format(room_name.upper()))
+            return "Room does not exist"
