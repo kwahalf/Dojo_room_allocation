@@ -7,6 +7,8 @@ Usage:
     dojo add_person <first_name> <last_name> <Person_role>
                     [--a=<wants_accomodation>]
     dojo print_room <room_name>
+    dojo print_unallocated [ --f=<file_name>]
+    dojo print_allocations [ --f=<file_name>]
     dojo (-i | --interactive)
 
     Options:
@@ -91,13 +93,31 @@ class DojoSystem(cmd.Cmd):
             wants_accomodation = "N"
         else:
             wants_accomodation = str(args['--a'])
-        dojo.add_person(first_name, second_name, role, wants_accomodation)
+        dojo.add_person(first_name, second_name, role,
+                        wants_accomodation.upper())
 
     @docopt_cmd
     def do_print_room(self, arg):
         """usage: print_room <room_name>"""
         room_name = arg["<room_name>"]
         dojo.print_room(room_name)
+    @docopt_cmd
+    def do_print_unallocated(self, arg):
+        """usage: print_unallocated [ --f=<file_name>] """
+        file_name = str(arg['--f'])
+        if file_name:
+            dojo.print_unallocated(file_name)
+        else:
+            dojo.print_unallocated()
+    @docopt_cmd
+    def do_print_allocations(self, arg):
+        """usage: print_allocations [ --f=<file_name>]"""
+        file_name = str(arg['--f'])
+        if file_name:
+            dojo.print_allocations(file_name)
+        else:
+            dojo.print_allocations()
+
 
     def do_clear(self, arg):
         """Clears screen"""
