@@ -97,7 +97,8 @@ class Dojo(object):
                     return "Staff Added and Allocated Office Only"
                 # If role is not defined
                 else:
-                    print("{} is not a valid role type.".format(role))
+                    print("either '{}' or '{}'is not a valid option."
+                          .format(role, wants_accomodation))
 
         # If name is integer print and return the prompt bellow
         else:
@@ -173,3 +174,44 @@ class Dojo(object):
         else:
             print("{} does not exist in dojo".format(room_name.upper()))
             return "Room does not exist"
+
+    def print_unallocated(self, filename):
+        # check if
+        if not self.unallocated:
+            print("No Member in Unallocated")
+            return "No Member in Unallocated"
+        if filename:
+            with open(filename, 'w') as f:
+                print("\n UNALLOCATED MEMBERS")
+                print("----" * 10)
+                for person in self.unallocated:
+                    person_name = "\n" + person.person_name
+                    print(person_name)
+                    print("----" * 10)
+                    f.write(person_name)
+                print("operation success")
+                return "operation success"
+        
+
+
+
+    def print_allocations(self, filename):
+        if not self.rooms:
+            print("No Rooms to Show")
+            return "No Rooms"
+        output = " "
+        for room in self.rooms:
+            if len(room.occupants):
+                output += room.room_name.upper() + '\n'
+                output += "--" * 60 + '\n'
+                for occupant in room.occupants:
+                    output += occupant.person_name + ", "
+                output += ("\n\n")
+        
+        if filename:
+            with open(filename, 'w') as f:
+                f.write(output)
+                print (output)
+            print("operation sucessful")
+            return "operation sucessful"
+
