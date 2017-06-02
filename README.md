@@ -42,3 +42,22 @@ print_room <room_name>
 This command prints the room name and the names of occupants in the room
 
 print_room kakamega
+
+print_allocated [--f= <file_name>]
+
+prints a list of allocations onto the screen. Specifying the optional --f here outputs the registered allocations to a txt file with the name provided.
+
+print_allocated [--f=data.txt]
+
+print_unallocated [--f= <file_name>]
+
+Prints a list of unallocated people to the screen. Specifying the optional --f  here outputs the information to the txt file with the name provided
+
+print_unallocated [--f=data.txt]
+
+
+
+
+
+
+
