@@ -1,8 +1,8 @@
 import unittest
 import random
 from Dojo import Dojo
-#from Models.person import Fellow, Staff, Person
-#from Models.Room import Room, Office, LivingSpace
+from Models.person import Fellow, Staff, Person
+from Models.Room import Room, Office, LivingSpace
 
 
 class TestDojo(unittest.TestCase):
@@ -77,27 +77,11 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room("Voi", "OFFICE")
         self.dojo.add_person("Martin", "Katami", "STAFF", "N")
         self.assertEqual(self.dojo.print_allocations(
-            "data.txt"), "Allocations Printed to data.txt")
-
-    def test_print_allocations_to_file(self):
-        #Test that Allocations Printed successfully
-        self.dojo.create_room("Webuye", "OFFICE")
-        self.dojo.add_person("Kevin", "Juma", "STAFF", "N")
-        self.assertEqual(self.dojo.print_allocations(self),
-                         "Allocations Printed")
+            "data.txt"), "operation sucessful")
 
     def test_print_allocations_while_there_are_no_rooms(self):
         #Test that allocations not printed if no rooms available in Dojo
         self.assertEqual(self.dojo.print_allocations("data.txt"), "No Rooms")
-
-    def test_if_you_can_print_unallocated_members(self):
-        # Test if unallocated members printed"""
-        self.dojo.add_person("ROSE", "WAMBUI", "STAFF", "N")
-        self.dojo.add_person("Ben", "Katili", "fellow", "N")
-        self.dojo.create_room("London", "OFFICE")
-        self.dojo.create_room("Brexit", "livingspace")
-        self.assertEqual(self.dojo.print_unallocated(self),
-                         "Unallocated Displayed")
 
     def test_print_unallocated_with_no_members_unallocated(self):
          #Test that unallocated list is not printed
@@ -107,6 +91,85 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person("James", "Mambo", "fellow", "N")
         self.assertEqual(self.dojo.print_unallocated(self),
                          "No Member in Unallocated")
+
+    def test_if_person_not_in_Dojo_can_be_reallocated(self):
+        #Test if a person not in Dojo can be reallocated
+        self.dojo.create_room("ACCRA", "OFFICE")
+        self.assertEqual(self.dojo.reallocate_person("PETTER", "KENETH",
+                                                     "ACCRA"),
+                         "Add {} to Dojo first".format("PETTER KENETH"))
+
+    def test_if_can_reallocate_person_to_unavailable_room(self):
+        #Test IF person can  be reallocated to unavailable room
+        self.dojo.create_room("NAIROBI", "OFFICE")
+        self.dojo.add_person("ALPHA", "KIGEN", "STAFF", "N")
+        self.assertEqual(self.dojo.reallocate_person("ALPHA", "KIGEN",
+                         "CAIRO"),
+                         "{} is not a room in Dojo".format("CAIRO"))
+
+    def test_if_reallocation_is_successful(self):
+        #Test if person is successfully reallocated
+        self.dojo.create_room("Accra", "OFFICE")
+        self.dojo.add_person("Rose", "Wambui", "STAFF", "N")
+        self.dojo.create_room("Cairo", "OFFICE")
+        self.assertEqual(self.dojo.reallocate_person(
+                         "ROSE", "WAMBUI", "CAIRO"),
+                         "Reallocated Successfully")
+
+    def test_if_reallocates_to_appropriate_room_type(self):
+        #Test person reallocated to room type as current room
+        self.dojo.create_room("Accra", "OFFICE")
+        self.dojo.add_person("Rose", "Wambui", "STAFF", "N")
+        self.dojo.create_room("Unono", "LIVINGSPACE")
+        self.assertEqual(self.dojo.reallocate_person(
+                         "ROSE", "WAMBUI", "UNONO"),
+                         "Choose Appropriate Room Type")
+
+    def test_if_reallocate_person_to_same_room(self):
+        #Test when person is reallocated to same room
+        self.dojo.create_room("Accra", "OFFICE")
+        self.dojo.add_person("Rose", "Wambui", "STAFF", "N")
+        self.assertEqual(self.dojo.reallocate_person(
+                         "Rose", "Wambui", "Accra"),
+                         "ROSE WAMBUI is already in ACCRA")
+
+    def test_if_reallocate_from_office_to_livingspace(self):
+        #Test that member can not be reallocated from office
+        #to livingspace and vice versa
+        self.dojo.create_room("Accra", "OFFICE")
+        self.dojo.create_room("Unono", "LIVINGSPACE")
+        self.dojo.add_person("Rose", "Wambui", "STAFF", "N")
+        self.assertEqual(self.dojo.reallocate_person(
+                         "Rose", "Wambui", "Unono"),
+                         "Choose Appropriate Room Type")
+
+    def test_if_reallocate_person_to_full_room(self):
+        #Test that person can not be reallocated to already full room"""
+        self.dojo.create_room("ACCRA", "OFFICE")
+        self.dojo.add_person("OLUWAFEMI", "SULE", "FELLOW", "N")
+        self.dojo.add_person("DOMINIC", "WALTERS", "STAFF", "N")
+        self.dojo.add_person("SIMON", "PATTERSON", "FELLOW", "N")
+        self.dojo.add_person("MARI", "LAWRENCE", "FELLOW", "N")
+        self.dojo.add_person("LEIGH", "RILEY", "STAFF", "N")
+        self.dojo.add_person("TANA", "LOPEZ", "FELLOW", "N")
+        self.dojo.create_room("CAIRO", "OFFICE")
+        self.dojo.add_person("ROSE", "WAMBUI", "FELLOW", "N")
+        self.assertEqual(self.dojo.reallocate_person(
+                         "Rose", "Wambui", "Accra"), "Room is Full")
+
+    def test_load_people_from_textfile(self):
+        #Test if people are successfully loaded to the app from text file
+        self.assertEqual(self.dojo.load_people(
+                         "data.txt"), "People Successfully Loaded")
+
+    def test_load_people_from_inconsistent_textfile(self):
+        #Test if you can load inconsistent data to app from text file
+        self.assertEqual(self.dojo.load_people(
+                         "people.txt"), "Data not consistent")
+
+    def test_load_people_from_non_existing_textfile(self):
+        #Test if you can load data to app from unexisting text file
+        self.assertEqual(self.dojo.load_people("p.txt"), "File Not Found")
 
 if __name__ == "__main__":
     unittest.main(exit=False)
