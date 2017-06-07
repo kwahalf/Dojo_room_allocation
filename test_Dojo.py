@@ -1,8 +1,8 @@
 import unittest
 import random
 from Dojo import Dojo
-from Models.person import Fellow, Staff, Person
-from Models.Room import Room, Office, LivingSpace
+#from Models.person import Fellow, Staff, Person
+#from Models.Room import Room, Office, LivingSpace
 
 
 class TestDojo(unittest.TestCase):
@@ -94,9 +94,9 @@ class TestDojo(unittest.TestCase):
 
     def test_if_person_not_in_Dojo_can_be_reallocated(self):
         #Test if a person not in Dojo can be reallocated
-        self.dojo.create_room("ACCRA", "OFFICE")
+        self.dojo.create_room("DONHOLM", "OFFICE")
         self.assertEqual(self.dojo.reallocate_person("PETTER", "KENETH",
-                                                     "ACCRA"),
+                                                     "DONHOLM"),
                          "Add {} to Dojo first".format("PETTER KENETH"))
 
     def test_if_can_reallocate_person_to_unavailable_room(self):
@@ -109,58 +109,58 @@ class TestDojo(unittest.TestCase):
 
     def test_if_reallocation_is_successful(self):
         #Test if person is successfully reallocated
-        self.dojo.create_room("Accra", "OFFICE")
-        self.dojo.add_person("Rose", "Wambui", "STAFF", "N")
-        self.dojo.create_room("Cairo", "OFFICE")
+        self.dojo.create_room("KITUI", "OFFICE")
+        self.dojo.add_person("Denis", "Kwanusu", "STAFF", "N")
+        self.dojo.create_room("Bomas", "OFFICE")
         self.assertEqual(self.dojo.reallocate_person(
-                         "ROSE", "WAMBUI", "CAIRO"),
+                         "DENIS", "KWANUSU", "BOMAS"),
                          "Reallocated Successfully")
 
     def test_if_reallocates_to_appropriate_room_type(self):
         #Test person reallocated to room type as current room
         self.dojo.create_room("Accra", "OFFICE")
-        self.dojo.add_person("Rose", "Wambui", "STAFF", "N")
+        self.dojo.add_person("DENIS", "KWANUSU", "STAFF", "N")
         self.dojo.create_room("Unono", "LIVINGSPACE")
         self.assertEqual(self.dojo.reallocate_person(
-                         "ROSE", "WAMBUI", "UNONO"),
+                         "DENIS", "KWANUSU", "UNONO"),
                          "Choose Appropriate Room Type")
 
     def test_if_reallocate_person_to_same_room(self):
         #Test when person is reallocated to same room
         self.dojo.create_room("Accra", "OFFICE")
-        self.dojo.add_person("Rose", "Wambui", "STAFF", "N")
+        self.dojo.add_person("DENIS", "KWANUSU", "STAFF", "N")
         self.assertEqual(self.dojo.reallocate_person(
-                         "Rose", "Wambui", "Accra"),
-                         "ROSE WAMBUI is already in ACCRA")
+                         "DENIS", "KWANUSU", "Accra"),
+                         "DENIS KWANUSU is already in ACCRA")
 
     def test_if_reallocate_from_office_to_livingspace(self):
         #Test that member can not be reallocated from office
         #to livingspace and vice versa
         self.dojo.create_room("Accra", "OFFICE")
         self.dojo.create_room("Unono", "LIVINGSPACE")
-        self.dojo.add_person("Rose", "Wambui", "STAFF", "N")
+        self.dojo.add_person("DENIS", "KWANUSU", "STAFF", "N")
         self.assertEqual(self.dojo.reallocate_person(
-                         "Rose", "Wambui", "Unono"),
+                         "DENIS", "KWANUSU", "Unono"),
                          "Choose Appropriate Room Type")
 
     def test_if_reallocate_person_to_full_room(self):
         #Test that person can not be reallocated to already full room"""
-        self.dojo.create_room("ACCRA", "OFFICE")
-        self.dojo.add_person("OLUWAFEMI", "SULE", "FELLOW", "N")
-        self.dojo.add_person("DOMINIC", "WALTERS", "STAFF", "N")
-        self.dojo.add_person("SIMON", "PATTERSON", "FELLOW", "N")
-        self.dojo.add_person("MARI", "LAWRENCE", "FELLOW", "N")
-        self.dojo.add_person("LEIGH", "RILEY", "STAFF", "N")
-        self.dojo.add_person("TANA", "LOPEZ", "FELLOW", "N")
-        self.dojo.create_room("CAIRO", "OFFICE")
-        self.dojo.add_person("ROSE", "WAMBUI", "FELLOW", "N")
+        self.dojo.create_room("RAVIN", "OFFICE")
+        self.dojo.add_person("MARTIN", "TUNGE", "FELLOW", "N")
+        self.dojo.add_person("CHARLSE", "ODUK", "STAFF", "N")
+        self.dojo.add_person("SHARON", "OWINO", "FELLOW", "N")
+        self.dojo.add_person("GRACE", "KUKUBO", "FELLOW", "N")
+        self.dojo.add_person("BOB", "COLIMORE", "STAFF", "N")
+        self.dojo.add_person("BIBI", "TOP", "FELLOW", "N")
+        self.dojo.create_room("AFRICA", "OFFICE")
+        self.dojo.add_person("James", "Otieno", "FELLOW", "N")
         self.assertEqual(self.dojo.reallocate_person(
-                         "Rose", "Wambui", "Accra"), "Room is Full")
+                         "James", "Otieno", "Ravin"), "Room is Full")
 
     def test_load_people_from_textfile(self):
         #Test if people are successfully loaded to the app from text file
         self.assertEqual(self.dojo.load_people(
-                         "data.txt"), "People Successfully Loaded")
+                         "data1.txt"), "People Successfully Loaded")
 
     def test_load_people_from_inconsistent_textfile(self):
         #Test if you can load inconsistent data to app from text file
