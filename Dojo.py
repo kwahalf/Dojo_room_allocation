@@ -176,10 +176,11 @@ class Dojo(object):
             return "Room does not exist"
 
     def print_unallocated(self, filename):
-        # check if
+        # check if there is anyone in allocated list
         if not self.unallocated:
             print("No Member in Unallocated")
             return "No Member in Unallocated"
+        #check if filename is provided
         if filename:
             with open(filename, 'w') as f:
                 print("\n UNALLOCATED MEMBERS")
@@ -192,26 +193,26 @@ class Dojo(object):
                 print("operation success")
                 return "operation success"
         
-
-
-
     def print_allocations(self, filename):
         if not self.rooms:
             print("No Rooms to Show")
             return "No Rooms"
-        output = " "
-        for room in self.rooms:
-            if len(room.occupants):
-                output += room.room_name.upper() + '\n'
-                output += "--" * 60 + '\n'
-                for occupant in room.occupants:
-                    output += occupant.person_name + ", "
-                output += ("\n\n")
-        
-        if filename:
-            with open(filename, 'w') as f:
-                f.write(output)
-                print (output)
-            print("operation sucessful")
-            return "operation sucessful"
+        elif not self.allocated:
+            print("No members in the system")
+        else:
+            output = " "
+            for room in self.rooms:
+                if len(room.occupants):
+                    output += room.room_name.upper() + '\n'
+                    output += "--" * 60 + '\n'
+                    for occupant in room.occupants:
+                        output += occupant.person_name + ", "
+                    output += ("\n\n")
+            
+            if filename:
+                with open(filename, 'w') as f:
+                    f.write(output)
+                    print (output)
+                print("operation sucessful")
+                return "operation sucessful"
 
