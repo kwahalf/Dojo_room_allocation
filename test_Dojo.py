@@ -1,8 +1,9 @@
+#!/usr/bin/python3
 import unittest
 import random
 from Dojo import Dojo
-#from Models.person import Fellow, Staff, Person
-#from Models.Room import Room, Office, LivingSpace
+from Models.person import Fellow, Staff, Person
+from Models.Room import Room, Office, LivingSpace
 
 
 class TestDojo(unittest.TestCase):
