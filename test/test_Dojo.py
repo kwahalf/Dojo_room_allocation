@@ -1,9 +1,13 @@
 #!/usr/bin/python3
 import unittest
+import sys
+import os.path
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import random
-from Dojo import Dojo
-from Models.person import Fellow, Staff, Person
-from Models.Room import Room, Office, LivingSpace
+from ..Dojo import Dojo
+
+
 
 
 class TestDojo(unittest.TestCase):
@@ -78,11 +82,12 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room("Voi", "OFFICE")
         self.dojo.add_person("Martin", "Katami", "STAFF", "N")
         self.assertEqual(self.dojo.print_allocations(
-            "data.txt"), "operation sucessful")
+            "data.txt"), "operation sucessful") 
 
     def test_print_allocations_while_there_are_no_rooms(self):
         #Test that allocations not printed if no rooms available in Dojo
         self.assertEqual(self.dojo.print_allocations("data.txt"), "No Rooms")
+
 
     def test_print_unallocated_with_no_members_unallocated(self):
          #Test that unallocated list is not printed
@@ -92,7 +97,6 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person("James", "Mambo", "fellow", "N")
         self.assertEqual(self.dojo.print_unallocated(self),
                          "No Member in Unallocated")
-
     def test_if_person_not_in_Dojo_can_be_reallocated(self):
         #Test if a person not in Dojo can be reallocated
         self.dojo.create_room("DONHOLM", "OFFICE")
