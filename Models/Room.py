@@ -15,7 +15,6 @@ class Room(object):
         self.max_capacity = max_capacity
         self.occupants = []
 
-
 # class office a subclass of Room
 class Office(Room):
 
