@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
@@ -9,6 +8,8 @@ Usage:
     dojo print_room <room_name>
     dojo print_unallocated [ --f=<file_name>]
     dojo print_allocations [ --f=<file_name>]
+    dojo reallocate_person <first_name> <last_name> <room_name>
+    dojo load_people <file_name>
     dojo (-i | --interactive)
 
     Options:
@@ -60,9 +61,9 @@ def docopt_cmd(func):
 
 
 def intro():
-    cprint(figlet_format("DOJO VERSION 0", font='starwars'),
+    cprint(figlet_format("DOJO VERSION 2", font='starwars'),
            'yellow', 'on_red', attrs=['bold'])
-    print("Welcome to the DOJO! version 0")
+    print("Welcome to the DOJO! version 2")
     cprint(__doc__, 'blue')
 
 
@@ -120,9 +121,23 @@ class DojoSystem(cmd.Cmd):
         else:
             dojo.print_allocations()
 
+    @docopt_cmd
+    def do_reallocate_person(self, args):
+        """usage: reallocate_person <first_name> <last_name> <room_name> """
+        first_name = args["<first_name>"]
+        last_name = args["<last_name>"]
+        room_name = args["<room_name>"]
+        dojo.reallocate_person(first_name, last_name, room_name)
+
+    @docopt_cmd
+    def do_load_people(self, arg):
+        """usage: load_people <file_name>"""
+        file_name = arg["<file_name>"]
+        dojo.load_people(file_name)
+
     def do_clear(self, arg):
         """Clears screen"""
-        os.system("cls")
+        os.system("clear")
 
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
@@ -132,7 +147,7 @@ class DojoSystem(cmd.Cmd):
 opt = docopt(__doc__, sys.argv[1:])
 
 if opt['--interactive']:
-    os.system("cls")
+    os.system("clear")
     intro()
     DojoSystem().cmdloop()
 
