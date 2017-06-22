@@ -14,7 +14,9 @@ class Person(object):
         self.wants_accomodation = wants_accomodation
 
 
-#Class Fellow inherits from class person
+"""Class Fellow inherits from class person"""
+
+
 class Fellow(Person):
     def __init__(self, person_name, person_id=None,
                  role="FELLOW", wants_accomodation=""):
@@ -23,7 +25,9 @@ class Fellow(Person):
         self.role = "FELLOW"
 
 
-#Class Staff inherits from class person
+"""Class Staff inherits from class person"""
+
+
 class Staff(Person):
     def __init__(self, person_name, person_id=None,
                  role="STAFF", wants_accomodation="N"):

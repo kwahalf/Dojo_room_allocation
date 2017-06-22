@@ -1,6 +1,17 @@
 import random
+from os import path
+import sys
+sys.path.append(path.dirname(path.abspath(__file__)))
+
 from Models.person import Person, Fellow, Staff
 from Models.Room import Room, Office, LivingSpace
+from Models.database import People, Rooms, Base
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import MetaData, Column, Table
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import exc
 
 
 class Dojo(object):
@@ -12,9 +23,9 @@ class Dojo(object):
         self.unallocated = []
 
     def create_room(self, room_name, purpose):
-        #checks room_name and purpose are strings
+        # checks room_name and purpose are strings
         if (isinstance(room_name, str) and isinstance(purpose, str)):
-            #checks if room is already allocated
+            # checks if room is already allocated
             if [room for room in self.rooms
                if room_name.upper() == room.room_name.upper()]:
                 print("{} already Exists in Dojo.".format(room_name.upper()))
@@ -126,6 +137,7 @@ class Dojo(object):
                 # does not assign office space and add the person
                 # on a waiting list
                 self.unallocated.append(person)
+
                 print("No Office available now, {} placed in waiting list ".
                       format(person.person_name))
                 return "No Office Available"
@@ -176,7 +188,7 @@ class Dojo(object):
             return "Room does not exist"
 
     def print_unallocated(self, filename):
-        # check if
+        # check if anyone is in the unallocated list
         if not self.unallocated:
             print("No Member in Unallocated")
             return "No Member in Unallocated"
@@ -185,10 +197,12 @@ class Dojo(object):
                 print("\n UNALLOCATED MEMBERS")
                 print("----" * 10)
                 for person in self.unallocated:
-                    person_name = "\n" + person.person_name
-                    print(person_name)
+                    record = person.person_name + " "
+                    record += person.role + " "
+                    record += "\n"
+                    print(record)
                     print("----" * 10)
-                    f.write(person_name)
+                    f.write(record)
                 print("operation success")
                 return "operation success"
 
@@ -208,6 +222,185 @@ class Dojo(object):
         if filename:
             with open(filename, 'w') as f:
                 f.write(output)
-                print (output)
+                print(output)
             print("operation sucessful")
             return "operation sucessful"
+
+    def reallocate_person(self, first_name, last_name, room_name):
+        """ method to reallocate a person to another room """
+        try:
+            person_name = first_name.upper() + " " + last_name.upper()
+            # Assigns allocated variable a single element list containing
+            # a persons object that has the same person_name property
+            # like the one provide above if He/she has been allocated a room
+            allocated = [allocated for allocated in self.allocated if
+                         person_name.upper() == allocated.person_name.upper()]
+            # Assighns room variable a single element  list containing the
+            # room object that has the same room_name property like the one
+            # provided if the room is already created.
+            room = [room for room in self.rooms if room_name.upper() ==
+                    room.room_name.upper()]
+            person = allocated
+            # Check if a person is on the system
+            if not person:
+                print("Add {} to Dojo first".format(person_name))
+                return "Add {} to Dojo first".format(person_name)
+            # check if the room exists
+            elif not room:
+                print("{} is not a room in Dojo".format(room_name))
+                return "{} is not a room in Dojo".format(room_name)
+            # Check if the person is already an occupant in that room
+            elif [occupant for occupant in room[0].occupants
+                  if person_name == occupant.person_name]:
+                print("{} is already in {}".format(
+                    person_name, room[0].room_name))
+                return "{} is already in {}".format(person_name,
+                                                    room[0].room_name)
+            # Check if room has space available
+            elif (room[0].purpose == "office" and len(room[0].occupants) == 6):
+                print("{} is full.".format(room[0].room_name))
+                return "Room is Full"
+
+            elif (room[0].purpose == "living_space" and
+                  len(room[0].occupants) == 4):
+                print("{} is full.".format(room[0].room_name))
+                return"Room is Full"
+
+            else:
+                # Finds occupants current room
+                current_room = [room for room in self.rooms if person[
+                    0] in room.occupants]
+                # Checks if occupant's current room is the same as the one
+                # that he is to be reallocated then reallocates occupant
+                if current_room[0].purpose == room[0].purpose:
+                    room[0].occupants.append(person[0])
+                    current_room[0].occupants.remove(person[0])
+                    person[0].current_room = room[0].room_name
+                    print("{} was moved from {} to {}".format(
+                        person[0].person_name, current_room[0].room_name,
+                        room[0].room_name))
+                    return "Reallocated Successfully"
+
+                else:
+                    print("Can Only Reallocate to Room with" +
+                          "Purpose as Current Room")
+                    return "Choose Appropriate Room Type"
+        except Exception as e:
+            print("Error Occured, Try Later")
+
+    def load_people(self, filename):
+        """ This method adds people to rooms from a text file """
+
+        try:
+            if filename:  # check if file exists
+                try:
+                    with open(filename, 'r') as f:  # opens file
+                        # read lines and save in list called people
+                        people = f.readlines()
+                    # iterate through each element in the list and load them
+                    for person in people:
+                        params = person.split() + ["N"]
+                        self.add_person(params[0], params[
+                                        1], params[2], params[3])
+                    print("People Successfully Loaded")
+                    return "People Successfully Loaded"
+
+                except IndexError:
+                    print("Data not consistent")
+                    return "Data not consistent"
+        except FileNotFoundError:
+            print("File Not Found")
+            return "File Not Found"
+
+    def save_state(self, database_name="dojo_database.db"):
+        """ method to save all data in the app into SQLite database """
+
+        try:
+            if database_name:
+                engine = create_engine('sqlite:///{}'.format(database_name))
+            else:
+                engine=create_engine('sqlite:///dojo_database.database')
+                Base.metadata.create_all(engine)
+            Session = sessionmaker(bind=engine)
+            session = Session()
+
+            for table in Base.metadata.sorted_tables:
+                session.execute(table.delete())
+                session.commit()
+            for person in self.allocated + self.unallocated:
+                rooms_allocated = " "
+                for room in self.rooms:
+                    if person in room.occupants:
+                        rooms_allocated += room.room_name + "  "
+                person = People(Name=person.person_name, Role=person.role,
+                                Room_allocated=rooms_allocated)
+                session.add(person)
+
+            for room in self.rooms:
+                people = " "
+                for occupant in room.occupants:
+                    people += occupant.person_name + "  "
+                room = Rooms(Name=room.room_name,
+                             Purpose=room.purpose, Occupants=people)
+
+                session.add(room)
+            session.commit()
+            session.close()
+            print("Data Saved Successfully")
+            return "Data Saved"
+        except exc.SQLAlchemyError:
+            session.rollback()
+            print("Error Saving to DB")
+
+    def load_state(self, database_name):
+        """ method to load data from database into the app """
+
+        try:
+            engine = create_engine('sqlite:///{}'.format(database_name))
+            Base.metadata.create_all(engine)
+            Session = sessionmaker(bind=engine)
+            session = Session()
+
+            # Load room data
+            Query = session.query(Rooms.Name, Rooms.Purpose, Rooms.Occupants)
+            for room_name, purpose, occupants in Query:
+                individuals = occupants.split("  ")
+                individuals.remove("")
+                if purpose == "office":
+                    room = Office(room_name)
+                    for individual in individuals:
+                        person = Person(individual)
+                        room.occupants.append(person)
+                    self.offices.append(room)
+                    self.rooms.append(room)
+                elif purpose == "living_space":
+                    room = LivingSpace(room_name)
+                    for individual in individuals:
+                        person = Person(individual)
+                        room.occupants.append(person)
+                    self.living_spaces.append(room)
+                    self.rooms.append(room)
+
+            # Load People data
+            Query = session.query(People.Name,
+                                  People.Role, People.Room_allocated)
+            for person_name, role, rooms_allocated in Query:
+                if role == "FELLOW":
+                    person = Fellow(person_name)
+                    if len(rooms_allocated) > 1:
+                        self.allocated.append(person)
+                    else:
+                        self.unallocated.append(person)
+                else:
+                    person = Staff(person_name)
+                    if len(rooms_allocated) > 1:
+                        self.allocated.append(person)
+                    else:
+                        self.unallocated.append(person)
+
+            print("Data Successfully Loaded to App")
+            return "Data Successfully Loaded to App"
+
+        except exc.SQLAlchemyError:
+            print("Invalid database name")
+            return "Invalid Database Name"
