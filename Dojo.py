@@ -318,8 +318,9 @@ class Dojo(object):
         try:
             if database_name:
                 engine = create_engine('sqlite:///{}'.format(database_name))
+                Base.metadata.create_all(engine)
             else:
-                engine=create_engine('sqlite:///dojo_database.database')
+                engine = create_engine('sqlite:///dojo_database.db')
                 Base.metadata.create_all(engine)
             Session = sessionmaker(bind=engine)
             session = Session()

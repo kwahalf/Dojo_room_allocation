@@ -6,11 +6,13 @@ Usage:
     dojo add_person <first_name> <last_name> <Person_role>
                     [--a=<wants_accomodation>]
     dojo print_room <room_name>
-    dojo print_unallocated [ --f=<file_name>]
+    dojo print_unallocated [--f=<file_name>]
     dojo print_allocations [ --f=<file_name>]
     dojo reallocate_person <first_name> <last_name> <room_name>
     dojo load_people <file_name>
     dojo (-i | --interactive)
+    dojo save_state [ --db=<db_name>]
+    dojo load_state <db_name>
 
     Options:
     -i, --interactive  Interactive Mode
@@ -134,6 +136,22 @@ class DojoSystem(cmd.Cmd):
         """usage: load_people <file_name>"""
         file_name = arg["<file_name>"]
         dojo.load_people(file_name)
+
+    @docopt_cmd
+    def do_save_state(self, arg):
+        """usage: save_state [ --db=<db_name>]"""
+        db_name = arg['--db']
+        if db_name:
+            dojo.save_state(db_name)
+        else:
+            dojo.save_state()
+
+    @docopt_cmd
+    def do_load_state(self, arg):
+        """usage: load_state <db_name>"""
+        db_name = str(arg["<db_name>"])
+        if db_name:
+            dojo.load_state(db_name)
 
     def do_clear(self, arg):
         """Clears screen"""
