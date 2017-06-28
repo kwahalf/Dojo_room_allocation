@@ -1,0 +1,7 @@
+[run]
+    branch=True
+    omit=*/site-packages/*
+         */sqlite3/*
+         */numbers.py
+         */decimal.py
+
