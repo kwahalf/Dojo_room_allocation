@@ -348,7 +348,6 @@ class Dojo(object):
                     people += occupant.person_name + "  "
                 room = Rooms(Name=room.room_name,
                              Purpose=room.purpose, Occupants=people)
-
                 session.add(room)
             session.commit()
             session.close()
