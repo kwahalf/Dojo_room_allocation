@@ -1,7 +1,10 @@
-[run]
-    branch=True
-    omit=*/site-packages/*
-         */sqlite3/*
-         */numbers.py
-         */decimal.py
-
+[report]
+omit=
+    */python?.?/*
+    *site-packages/*
+    *site-packages/nose/*
+    *docopt.py*
+    *docopt*
+    *tests/*
+[html]
+directory = coverage_html
