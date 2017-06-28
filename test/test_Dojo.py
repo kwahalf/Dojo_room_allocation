@@ -4,6 +4,7 @@ import sys
 import os.path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import random
+
 from ..Dojo import Dojo
 
 
@@ -200,6 +201,44 @@ class TestDojo(unittest.TestCase):
         self.dojo.save_state("dojo_test_database.db")
         self.assertEqual(self.dojo.load_state("dojo_test_database.db"),
                          "Data Successfully Loaded to App")
+
+    def test_allocate_unallocated_office_works(self):
+        """Test that it allocates people who are not allocated officess
+            an office"""
+        self.dojo.add_person("DAISY", "GUDA", "STAFF", "N")
+        self.dojo.create_room("SHELL", "OFFICE")
+        self.dojo.add_person("UHURU", "KENYATA", "FELLOW", "Y")
+        self.assertEqual(self.dojo.allocate_unallocated_office("Daisy",
+                         "Guda"), "DAISY GUDA allocated office SHELL")
+        self.assertEqual(self.dojo.allocate_unallocated_office("Uhuru",
+                         "Kenyata"), "UHURU KENYATA already has an OFFICE")
+
+    def test_allocate_unallocated_office_not_allocate_not_in_dojo(self):
+        """Test that it does not allocate people who are not in dojo
+            offices"""
+        self.dojo.create_room("SHELL", "OFFICE")
+        self.assertEqual(self.dojo.allocate_unallocated_office("Fred",
+                         "Orina"), "FRED ORINA is not in dojo")
+
+    def test_allocate_unallocated_livingspace_works(self):
+        """Test that it allocates people who are not allocated officess
+            an office"""
+        self.dojo.create_room("SHELL", "OFFICE")
+        self.dojo.add_person("DAISY", "GUDA", "fellow", "Y")
+        self.dojo.create_room("BAT", "LIVINGSPACE")
+        self.dojo.add_person("UHURU", "KENYATA", "FELLOW", "Y")
+        self.assertEqual(self.dojo.allocate_unallocated_livingspace("Daisy",
+                         "Guda"), "DAISY GUDA allocated LIVINGSPACE BAT")
+        self.assertEqual(self.dojo.allocate_unallocated_livingspace("Uhuru",
+                         "Kenyata"), "UHURU KENYATA already has a LIVINGSPACE")
+
+    def test_allocate_unallocated_livingspace_not_allocate_not_in_dojo(self):
+        """Test that it does not allocate people who are not in dojo
+            livingspaces"""
+        self.dojo.create_room("SHELL", "LIVINGSPACE")
+        self.assertEqual(self.dojo.allocate_unallocated_livingspace("Fred",
+                         "Orina"), "FRED ORINA is not in dojo")
+
 
 if __name__ == "__main__":
     unittest.main(exit=False)
