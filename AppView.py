@@ -9,6 +9,8 @@ Usage:
     dojo print_unallocated [--f=<file_name>]
     dojo print_allocations [ --f=<file_name>]
     dojo reallocate_person <first_name> <last_name> <room_name>
+    dojo allocate_unallocated_livingspace <first_name> <second_name>
+    dojo allocate_unallocated_office <first_name> <second_name>
     dojo load_people <file_name>
     dojo (-i | --interactive)
     dojo save_state [ --db=<db_name>]
@@ -22,9 +24,11 @@ Usage:
 import sys
 import os
 import cmd
+
 from docopt import docopt, DocoptExit
 from pyfiglet import figlet_format
 from termcolor import cprint
+
 from Dojo import Dojo
 
 dojo = Dojo()
@@ -63,9 +67,9 @@ def docopt_cmd(func):
 
 
 def intro():
-    cprint(figlet_format("DOJO VERSION 2", font='starwars'),
+    cprint(figlet_format("DOJO VERSION 3", font='starwars'),
            'yellow', 'on_red', attrs=['bold'])
-    print("Welcome to the DOJO! version 2")
+    print("Welcome to the DOJO! version 3")
     cprint(__doc__, 'blue')
 
 
@@ -152,6 +156,21 @@ class DojoSystem(cmd.Cmd):
         db_name = str(arg["<db_name>"])
         if db_name:
             dojo.load_state(db_name)
+
+    @docopt_cmd
+    def do_allocate_unallocated_office(self, args):
+        """usage: allocate_unallocated_office <first_name> <second_name>"""
+        first_name = args["<first_name>"]
+        second_name = args["<second_name>"]
+        dojo.allocate_unallocated_office(first_name, second_name)
+
+    @docopt_cmd
+    def do_allocate_unallocated_livingspace(self, args):
+        """usage: allocate_unallocated_livingspace <first_name> <second_name>
+        """
+        first_name = args["<first_name>"]
+        second_name = args["<second_name>"]
+        dojo.allocate_unallocated_livingspace(first_name, second_name)
 
     def do_clear(self, arg):
         """Clears screen"""

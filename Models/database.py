@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String
 
 Base = declarative_base()
 
-
+""" orm for table People"""
 class People(Base):
     __tablename__ = 'People'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -12,7 +12,7 @@ class People(Base):
     Role = Column(String(260))
     Room_allocated = Column(String(260), nullable=True)
 
-
+""" ORM for table Rooms"""
 class Rooms(Base):
     __tablename__ = 'Rooms'
     id = Column(Integer, primary_key=True, autoincrement=True)
