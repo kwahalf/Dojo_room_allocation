@@ -3,8 +3,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
 
 Base = declarative_base()
+""" ORM for table People"""
 
-""" orm for table People"""
+
 class People(Base):
     __tablename__ = 'People'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -13,6 +14,8 @@ class People(Base):
     Room_allocated = Column(String(260), nullable=True)
 
 """ ORM for table Rooms"""
+
+
 class Rooms(Base):
     __tablename__ = 'Rooms'
     id = Column(Integer, primary_key=True, autoincrement=True)
