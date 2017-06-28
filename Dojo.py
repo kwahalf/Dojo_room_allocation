@@ -413,3 +413,80 @@ class Dojo(object):
         except exc.SQLAlchemyError:
             print("Invalid database name")
             return "Invalid Database Name"
+
+    def allocate_unallocated_office(self, first_name, last_name):
+        """ This methode adds people who missed offices to offices"""
+        name = first_name.upper() + " " + last_name.upper()
+        if self.offices:
+            room = [room for room in self.offices if len(
+                    room.occupants) < 6]
+            unallocated = [unallocated for unallocated in self.unallocated
+                           if name == unallocated.person_name]
+            allocated = [allocated for allocated in self.allocated
+                         if name == allocated.person_name]
+            if room:
+                if unallocated or allocated:
+                    if not allocated:
+                        office = random.SystemRandom().choice(room)
+                        office.occupants.append(unallocated[0])
+                        self.allocated.append(unallocated[0])
+                        self.unallocated.remove(unallocated[0])
+                        print("{} allocated office {}".format(name,
+                                                              office.room_name
+                                                              )
+                              )
+                        return "{} allocated office {}".format(name,
+                                                               office.room_name
+                                                               )
+                    else:
+                        print("{} already has an OFFICE".format(name))
+                        return "{} already has an OFFICE".format(name)
+                else:
+                    print("{} is not in dojo".format(name))
+                    return "{} is not in dojo".format(name)
+
+            else:
+                print("Available offices are full check later")
+                return "Available offices are full check later"
+
+        else:
+            print("No Offices Available Yet")
+            return "No Offices Available Yet"
+
+    def allocate_unallocated_livingspace(self, first_name, last_name):
+        """ This methode adds people who missed living spaces to living spaces
+        """
+        name = first_name.upper() + " " + last_name.upper()
+        if self.living_spaces:
+            room = [room for room in self.living_spaces if len(
+                    room.occupants) < 4]
+            unallocated = [unallocated for unallocated in self.unallocated
+                           if name == unallocated.person_name]
+            allocated = [allocated for allocated in self.allocated
+                         if name == allocated.person_name]
+            if room:
+                if unallocated or allocated:
+                    if unallocated:
+                        livingspace = random.SystemRandom().choice(room)
+                        livingspace.occupants.append(unallocated[0])
+                        self.allocated.append(unallocated[0])
+                        self.unallocated.remove(unallocated[0])
+                        print("{} allocated LIVINGSPACE {}".format(name,
+                              livingspace.room_name)
+                              )
+                        b = livingspace.room_name
+                        return "{} allocated LIVINGSPACE {}".format(name, b)
+                    else:
+                        print("{} already has a LIVINGSPACE".format(name))
+                        return "{} already has a LIVINGSPACE".format(name)
+                else:
+                    print("{} is not in dojo".format(name))
+                    return "{} is not in dojo".format(name)
+
+            else:
+                print("Available livingspaces are full check later")
+                return "Available livingspaces are full check later"
+
+        else:
+            print("No livingspace Available Yet")
+            return "No livingspace Available Yet"
