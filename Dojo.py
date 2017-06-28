@@ -23,6 +23,7 @@ class Dojo(object):
         self.unallocated = []
 
     def create_room(self, room_name, purpose):
+        """ method create room to add new rooms to dojo"""
         # checks room_name and purpose are strings
         if (isinstance(room_name, str) and isinstance(purpose, str)):
             # checks if room is already allocated
@@ -54,7 +55,7 @@ class Dojo(object):
             return "Room names should be strings"
 
     def add_person(self, first_name, second_name, role, wants_accomodation):
-        # Check if the names provided are strings before proceeding
+        """Check if the names provided are strings before proceeding"""
         if (isinstance(first_name, str) and isinstance(second_name, str)):
             # Changes all the names passed into uppercase and join them
             person_name = first_name.upper() + " " + second_name.upper()
@@ -117,6 +118,7 @@ class Dojo(object):
             return "person's names should be strings"
 
     def allocate_office(self, person):
+        """ This method allocates an office to a person"""
         try:
             # Check if there are offices with space and
             # if there are, allocate space
@@ -188,7 +190,9 @@ class Dojo(object):
             return "Room does not exist"
 
     def print_unallocated(self, filename):
+        """ Print a list of unallocated people """
         # check if anyone is in the unallocated list
+        Unallocated = list(set(self.unallocated))
         if not self.unallocated:
             print("No Member in Unallocated")
             return "No Member in Unallocated"
@@ -196,7 +200,7 @@ class Dojo(object):
             with open(filename, 'w') as f:
                 print("\n UNALLOCATED MEMBERS")
                 print("----" * 10)
-                for person in self.unallocated:
+                for person in Unallocated:
                     record = person.person_name + " "
                     record += person.role + " "
                     record += "\n"
@@ -328,7 +332,8 @@ class Dojo(object):
             for table in Base.metadata.sorted_tables:
                 session.execute(table.delete())
                 session.commit()
-            for person in self.allocated + self.unallocated:
+            all_people = list(set(self.allocated + self.unallocated))
+            for person in all_people:
                 rooms_allocated = " "
                 for room in self.rooms:
                     if person in room.occupants:
@@ -386,15 +391,19 @@ class Dojo(object):
             Query = session.query(People.Name,
                                   People.Role, People.Room_allocated)
             for person_name, role, rooms_allocated in Query:
+                number = len(rooms_allocated.split("  "))
                 if role == "FELLOW":
                     person = Fellow(person_name)
-                    if len(rooms_allocated) > 1:
+                    if number == 3:
+                        self.allocated.append(person)
+                    elif number == 2:
+                        self.unallocated.append(person)
                         self.allocated.append(person)
                     else:
                         self.unallocated.append(person)
                 else:
                     person = Staff(person_name)
-                    if len(rooms_allocated) > 1:
+                    if number == 2:
                         self.allocated.append(person)
                     else:
                         self.unallocated.append(person)
