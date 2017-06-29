@@ -23,6 +23,7 @@ class Dojo(object):
         self.unallocated = []
 
     def is_int(self, s):
+        """ method checks if the argument is a sting or integer"""
         try:
             int(s)
             return True
@@ -360,7 +361,7 @@ class Dojo(object):
             session.close()
             print("Data Saved Successfully")
             return "Data Saved"
-        except exc.SQLAlchemyError:
+        except:
             session.rollback()
             print("Error Saving to DB")
 
@@ -371,26 +372,42 @@ class Dojo(object):
             engine = create_engine('sqlite:///{}'.format(database_name))
             Session = sessionmaker(bind=engine)
             session = Session()
+            self.rooms = []
+            self.offices = []
+            self.living_spaces = []
+            self.allocated = []
+            self.unallocated = []
 
             # Load room data
             Query = session.query(Rooms.Name, Rooms.Purpose, Rooms.Occupants)
             for room_name, purpose, occupants in Query:
-                individuals = occupants.split("  ")
-                individuals.remove("")
-                if purpose == "office":
-                    room = Office(room_name)
-                    for individual in individuals:
-                        person = Person(individual)
-                        room.occupants.append(person)
-                    self.offices.append(room)
-                    self.rooms.append(room)
-                elif purpose == "living_space":
-                    room = LivingSpace(room_name)
-                    for individual in individuals:
-                        person = Person(individual)
-                        room.occupants.append(person)
-                    self.living_spaces.append(room)
-                    self.rooms.append(room)
+                if len(occupants) <= 1:
+                    if purpose == "office":
+                        room = Office(room_name)
+                        self.offices.append(room)
+                        self.rooms.append(room)
+                    elif purpose == "living_space":
+                        room = LivingSpace(room_name)
+                        self.living_spaces.append(room)
+                        self.rooms.append(room)
+
+                else:
+                    individuals = occupants.split("  ")
+                    individuals.remove("")
+                    if purpose == "office":
+                        room = Office(room_name)
+                        for individual in individuals:
+                            person = Person(individual)
+                            room.occupants.append(person)
+                        self.offices.append(room)
+                        self.rooms.append(room)
+                    elif purpose == "living_space":
+                        room = LivingSpace(room_name)
+                        for individual in individuals:
+                            person = Person(individual)
+                            room.occupants.append(person)
+                        self.living_spaces.append(room)
+                        self.rooms.append(room)
 
             # Load People data
             Query = session.query(People.Name,
