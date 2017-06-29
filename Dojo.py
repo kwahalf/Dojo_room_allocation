@@ -22,10 +22,17 @@ class Dojo(object):
         self.allocated = []
         self.unallocated = []
 
+    def is_int(self, s):
+        try:
+            int(s)
+            return True
+        except ValueError:
+            return False
+
     def create_room(self, room_name, purpose):
         """ method create room to add new rooms to dojo"""
         # checks room_name and purpose are strings
-        if (isinstance(room_name, str) and isinstance(purpose, str)):
+        if not self.is_int(room_name) and (isinstance(purpose, str)):
             # checks if room is already allocated
             if [room for room in self.rooms
                if room_name.upper() == room.room_name.upper()]:
@@ -56,7 +63,7 @@ class Dojo(object):
 
     def add_person(self, first_name, second_name, role, wants_accomodation):
         """Check if the names provided are strings before proceeding"""
-        if (isinstance(first_name, str) and isinstance(second_name, str)):
+        if not self.is_int(first_name) and not self.is_int(second_name):
             # Changes all the names passed into uppercase and join them
             person_name = first_name.upper() + " " + second_name.upper()
             # Creates a list of people allocated rooms
@@ -362,7 +369,6 @@ class Dojo(object):
 
         try:
             engine = create_engine('sqlite:///{}'.format(database_name))
-            Base.metadata.create_all(engine)
             Session = sessionmaker(bind=engine)
             session = Session()
 
@@ -410,7 +416,7 @@ class Dojo(object):
             print("Data Successfully Loaded to App")
             return "Data Successfully Loaded to App"
 
-        except exc.SQLAlchemyError:
+        except:
             print("Invalid database name")
             return "Invalid Database Name"
 
