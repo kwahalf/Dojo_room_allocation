@@ -9,14 +9,18 @@ Dojo is an app used to register and allocate rooms randomly to Andelans. Each An
    git clone https://github.com/kwahalf/Dojo_room_allocation
  
    cd Dojo_room_allocation
+   pip install virtualenv
+   virtualenv --python=python3 dojoenv
+   source dojoenv/bin/activate
 
 # Install Requirements
 
- pip install requierd pacakes listed in requirements.txt
+ pip install requierd pacakes listed in requirements.txt using
+ pip install -r requirements.txt
 
 # Start the app on the terminal
 
-  AppView.py -i
+ python AppView.py -i
   
 # The App has the following functionalities:
 
@@ -42,3 +46,18 @@ print_room <room_name>
 This command prints the room name and the names of occupants in the room
 
 print_room kakamega
+
+print_allocated [--f= <file_name>]
+
+prints a list of allocations onto the screen. Specifying the optional --f here outputs the registered allocations to a txt file with the name provided.
+
+print_allocated [--f=data.txt]
+
+print_unallocated [--f= <file_name>]
+
+Prints a list of unallocated people to the screen. Specifying the optional --f  here outputs the information to the txt file with the name provided
+
+print_unallocated [--f=data.txt]
+
+
+
